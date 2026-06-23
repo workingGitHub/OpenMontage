@@ -178,7 +178,7 @@ ELEVENLABS_API_KEY=your-key    # Premium TTS, AI music, sound effects
 OPENAI_API_KEY=your-key        # OpenAI TTS, DALL-E 3 images
 XAI_API_KEY=your-key           # xAI Grok image edits/generation + Grok video generation
 GOOGLE_API_KEY=your-key        # Google Imagen images, Google TTS (700+ voices)
-MINIMAX_API_KEY=your-key       # MiniMax T2A v2 TTS + image-01/image-01-live T2I & I2I
+MINIMAX_API_KEY=your-key       # MiniMax T2A v2 TTS + image-01/image-01-live T2I & I2I + music-2.6/music-cover
 DOUBAO_SPEECH_API_KEY=your-key # Volcengine Doubao Speech TTS (new console API Key)
 
 # More video providers:
@@ -374,7 +374,7 @@ Final video output -- only if self-review passes
 OpenMontage/
 ├── tools/              # 48 Python tools (the agent's hands)
 │   ├── video/          # 13 video gen tools + compose, stitch, trim
-│   ├── audio/          # 6 TTS providers + Suno/ElevenLabs music, mixing, enhancement
+│   ├── audio/          # 6 TTS providers + Suno/ElevenLabs/MiniMax music, mixing, enhancement
 │   ├── graphics/       # 10 image/graphics generation tools + diagrams, code snippets, math
 │   ├── enhancement/    # Upscale, bg remove, face enhance, color grade
 │   ├── analysis/       # Transcription, scene detect, frame sampling
@@ -476,6 +476,7 @@ Each tool declares which Layer 3 skills it relies on. The agent reads Layer 1 to
 | **Suno AI** | Cloud API | Full song generation with vocals, lyrics, any genre. Up to 8 minutes. |
 | **ElevenLabs Music** | Cloud API | AI music generation |
 | **ElevenLabs SFX** | Cloud API | Sound effect generation |
+| **MiniMax Music** | Cloud API | music-2.6 songs & instrumentals with structured-lyrics tags, music-cover for cover re-recording |
 
 **Post-Production (always available, always free):**
 
