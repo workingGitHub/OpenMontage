@@ -1,5 +1,4 @@
 import React from "react";
-import { loadFont } from "@remotion/google-fonts/SpaceGrotesk";
 import {
   AbsoluteFill,
   Audio,
@@ -12,6 +11,9 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+
+// Self-hosted via @fontsource/space-grotesk (CSS injected in Root.tsx).
+const fontFamily = "Space Grotesk";
 
 function resolveAsset(src: string): string {
   if (src.startsWith("http://") || src.startsWith("https://") || src.startsWith("data:")) {
@@ -27,11 +29,6 @@ import { CinematicRendererProps, CinematicTone, CinematicVideoScene } from "./ci
 import { CaptionOverlay } from "./components/CaptionOverlay";
 
 const FPS = 30;
-
-const { fontFamily } = loadFont("normal", {
-  weights: ["400", "500", "700"],
-  subsets: ["latin"],
-});
 
 const toneGradient = (tone: CinematicTone) => {
   switch (tone) {

@@ -1,3 +1,9 @@
+// Self-hosted Google Fonts via @fontsource (no network access required at render time).
+// Both fonts are SIL OFL 1.1 licensed — free for commercial use.
+// CSS @font-face declarations are bundled at build time; woff2 files live in node_modules.
+import "@fontsource/space-grotesk";
+import "@fontsource/playfair-display";
+
 import { Composition, CalculateMetadataFunction } from "remotion";
 import { Explainer, ExplainerProps } from "./Explainer";
 import {

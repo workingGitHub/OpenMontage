@@ -8,6 +8,8 @@
     "upgrade": "npx remotion upgrade"
   },
   "dependencies": {
+    "@fontsource/playfair-display": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
     "@remotion/captions": "^4.0.441",
     "@remotion/cli": "^4.0.441",
     "@remotion/google-fonts": "^4.0.441",
