@@ -178,7 +178,7 @@ ELEVENLABS_API_KEY=your-key    # Premium TTS, AI music, sound effects
 OPENAI_API_KEY=your-key        # OpenAI TTS, DALL-E 3 images
 XAI_API_KEY=your-key           # xAI Grok image edits/generation + Grok video generation
 GOOGLE_API_KEY=your-key        # Google Imagen images, Google TTS (700+ voices)
-MINIMAX_API_KEY=your-key       # MiniMax T2A v2 TTS (speech-2.8-hd, emotion + sound-effect tags)
+MINIMAX_API_KEY=your-key       # MiniMax T2A v2 TTS + image-01/image-01-live T2I & I2I
 DOUBAO_SPEECH_API_KEY=your-key # Volcengine Doubao Speech TTS (new console API Key)
 
 # More video providers:
@@ -375,7 +375,7 @@ OpenMontage/
 ├── tools/              # 48 Python tools (the agent's hands)
 │   ├── video/          # 13 video gen tools + compose, stitch, trim
 │   ├── audio/          # 6 TTS providers + Suno/ElevenLabs music, mixing, enhancement
-│   ├── graphics/       # 9 image/graphics generation tools + diagrams, code snippets, math
+│   ├── graphics/       # 10 image/graphics generation tools + diagrams, code snippets, math
 │   ├── enhancement/    # Upscale, bg remove, face enhance, color grade
 │   ├── analysis/       # Transcription, scene detect, frame sampling
 │   ├── avatar/         # Talking head, lip sync
@@ -434,13 +434,14 @@ Each tool declares which Layer 3 skills it relies on. The agent reads Layer 1 to
 </details>
 
 <details>
-<summary><strong>Image Generation — 10 tools/providers</strong></summary>
+<summary><strong>Image Generation — 11 tools/providers</strong></summary>
 
 | Provider | Type | Notes |
 |----------|------|-------|
 | **FLUX** | Cloud API | State-of-the-art quality |
 | **Google Imagen** | Cloud API | Imagen 4 — high-quality, multiple aspect ratios |
 | **Grok Imagine Image** | Cloud API | Strong image edits, style transfer, and multi-image compositing |
+| **MiniMax Image** | Cloud API | image-01 / image-01-live — T2I with 21:9 cinematic and I2I with character reference |
 | **DALL-E 3** | Cloud API | OpenAI's image model |
 | **Recraft** | Cloud API | Design-focused generation |
 | **Local Diffusion** | Local GPU | Stable Diffusion, free |
