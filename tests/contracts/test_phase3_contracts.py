@@ -143,7 +143,12 @@ class TestCapabilityMetadata:
         catalog = reg.capability_catalog()
         assert "tts" in catalog
         providers = {item["provider"] for item in catalog["tts"] if item["provider"] != "selector"}
-        assert providers == {"elevenlabs", "google_tts", "openai", "piper"}
+        # capability_catalog() auto-discovers all tools in tools/, so the
+        # set always reflects the full TTS surface (including doubao_tts and
+        # minimax_tts added later). Assert the new providers are present
+        # without locking the set in stone.
+        for required in {"elevenlabs", "google_tts", "openai", "piper", "doubao", "minimax"}:
+            assert required in providers, f"Missing TTS provider: {required}"
 
 
 # ---- Animated Explainer Pipeline ----
