@@ -293,6 +293,22 @@ Common catches:
 
 **Do not skip this step.** If validation fails, fix the issue and re-validate before rendering.
 
+**Mandatory boundary-alignment check.** Before rendering any pipeline that uses video xfade between TTS-driven scenes, call:
+
+```python
+from lib.audio_timing import (
+    probe_tts_segments, compute_aligned_durations, assert_xfade_aligned_with_audio
+)
+probes = probe_tts_segments([Path(s["narration_source"]) for s in ed["scenes"]])
+durations = compute_aligned_durations(probes, xfade_dur=0.6)
+assert_xfade_aligned_with_audio(durations, probes, xfade_dur=0.6)
+# Update ed["scenes"][i]["out_seconds"] = durations[i] before rendering.
+```
+
+The `assert_xfade_aligned_with_audio` check fails fast with a clear error if the xfade start drifts earlier than the previous segment's last audible frame. This is the exact failure mode that hit `projects/byakuya-60s` v2 — picture started changing 0.3-0.9s before the last phoneme ended, producing "narration cut off before next scene".
+
+If your pipeline is audio-led (uses acrossfade between TTS segments) and video xfade (uses xfade between video segments), keep both in lockstep: `xfade_dur == acrossfade_dur`, and pad each TTS segment with `apad=whole_dur=out_seconds[i]` so the audio segment boundary = the video segment boundary. Otherwise the audio and video drift apart by `0.6 * (n-1)` seconds.
+
 ### Step 6: Post-Render Self-Review (Mandatory — ALL steps required)
 
 After rendering, the agent **must review its own output** before presenting to the user. This catches issues the validator can't see (visual quality, audio sync, subtitle readability).
@@ -443,3 +459,5 @@ Validate the render_report against the schema and persist via checkpoint.
 - **Subtitle encoding**: Burn subtitles into the video (hardcoded) for maximum compatibility. Don't rely on soft subtitles for social media.
 - **Single-pass encode**: Two-pass encoding produces better quality at the same file size. Worth the extra render time.
 - **Ignoring media profile**: YouTube and TikTok have very different requirements. Always check the target profile.
+- **xfade starts before last word ends (the byakuya-60s v2 bug)**: TTS mp3s bake in 0.14–0.32s of trailing silence. If `out_seconds` is `mp3_total_s` and the xfade offset is `out_seconds - xfade_dur`, the picture begins changing 0.3–0.9s before the last word ends. Derive `out_seconds` from `last_sound_end_s` (use `lib/audio_timing.compute_aligned_durations()`), not from `mp3_total_s`. Run `assert_xfade_aligned_with_audio()` as a guard rail before rendering.
+- **Audio/video length drift with xfade**: Video xfade saves `xfade_dur * (n-1)` seconds of total runtime (each segment overlaps the next by `xfade_dur`). If audio is hard-concatenated with no overlap, audio ends up longer than video by exactly that amount. Use `acrossfade(d=xfade_dur)` between TTS segments, and pad each TTS segment with `apad=whole_dur=out_seconds[i]` so segment boundaries align.

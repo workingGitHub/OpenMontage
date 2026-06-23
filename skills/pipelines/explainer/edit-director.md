@@ -168,3 +168,11 @@ Validate the edit_decisions artifact against the schema and persist via checkpoi
 - **No ducking**: Music playing at full volume under narration makes the video unwatchable. Always configure ducking.
 - **Same transition everywhere**: Varying transitions creates rhythm. Use the playbook's allowed set, but don't use the same one for every cut.
 - **Subtitle font mismatch**: Subtitles should use the playbook's body font, not a random default.
+
+## TTS Duration vs. Visual Cut Duration (HARD RULE)
+
+**`out_seconds` MUST be derived from the TTS segment's *last audible frame*, not from the mp3's total duration.** TTS output (MiniMax, ElevenLabs, OpenAI, etc.) bakes in 0.14–0.32s of trailing silence after the last phoneme. If `out_seconds` equals `mp3_total_s`, then the visual xfade that starts at `out_seconds - xfade_dur` begins 0.3–0.9s BEFORE the last word ends. The user sees the picture change while the narration is still mid-sentence — exactly the "narration cut off before next scene" bug that hit `projects/byakuya-60s` v2.
+
+Use `lib/audio_timing.compute_aligned_durations()` (it wraps `silencedetect` with -40dB / 0.10s defaults) to compute `out_seconds[i] = last_sound_end_s[i] + xfade_dur`. The compose director then sets the video xfade offset to `out_seconds[i-1] - xfade_dur = last_sound_end_s[i-1]`, so the picture only begins changing *after* the previous narration finishes its last word.
+
+Pair with `lib/audio_timing.assert_xfade_aligned_with_audio()` in the compose stage as a guard rail — it fails fast with a clear error if the xfade start drifts earlier than the previous segment's last audible frame.
